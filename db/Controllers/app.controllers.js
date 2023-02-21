@@ -3,6 +3,7 @@ const {
   fetchReviews,
   fetchReview,
   fetchComments,
+  updatedReview,
 } = require("../Models/app.models");
 
 function getCategories(req, res, next) {
@@ -55,4 +56,23 @@ function getComments(req, res, next) {
     });
 }
 
-module.exports = { getCategories, getReviews, getReview, getComments };
+function updateReview(req, res, next) {
+  const { review_id } = req.params;
+  const { inc_votes } = req.body;
+
+  updatedReview(review_id, inc_votes)
+    .then((updatedReview) => {
+      res.status(200).send({ updatedReview });
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
+
+module.exports = {
+  getCategories,
+  getReviews,
+  getReview,
+  getComments,
+  updateReview,
+};

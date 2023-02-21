@@ -2,7 +2,11 @@ const express = require("express");
 
 const db = require("./connection");
 
-const { getCategories, getReview } = require("./Controllers/app.controllers");
+const {
+  getCategories,
+  getReviews,
+  getReview,
+} = require("./Controllers/app.controllers");
 
 const {
   handle404NonExistentPaths,
@@ -14,6 +18,8 @@ const {
 const app = express();
 
 app.get("/api/categories", getCategories);
+
+app.get("/api/reviews", getReviews);
 
 app.get("/api/reviews/:review_id", getReview);
 

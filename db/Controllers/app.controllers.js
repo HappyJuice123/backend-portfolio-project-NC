@@ -2,6 +2,7 @@ const {
   fetchCategories,
   fetchReviews,
   fetchReview,
+  fetchComments,
 } = require("../Models/app.models");
 
 function getCategories(req, res, next) {
@@ -36,4 +37,22 @@ function getReviews(req, res, next) {
     });
 }
 
-module.exports = { getCategories, getReviews, getReview };
+function getComments(req, res, next) {
+  const { review_id } = req.params;
+
+  const reviewIdPromise = fetchReview(review_id);
+  const commentsPromise = fetchComments(review_id);
+
+  Promise.all([reviewIdPromise, commentsPromise])
+    .then((result) => {
+      const { rows } = result[1];
+      const comments = rows;
+
+      res.status(200).send({ comments });
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
+
+module.exports = { getCategories, getReviews, getReview, getComments };

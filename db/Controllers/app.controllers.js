@@ -1,4 +1,4 @@
-const { fetchCategories } = require("../Models/app.models");
+const { fetchCategories, fetchReview } = require("../Models/app.models");
 
 function getCategories(req, res, next) {
   fetchCategories()
@@ -10,4 +10,16 @@ function getCategories(req, res, next) {
     });
 }
 
-module.exports = { getCategories };
+function getReview(req, res, next) {
+  const { review_id } = req.params;
+
+  fetchReview(review_id)
+    .then((review) => {
+      res.status(200).send({ review });
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
+
+module.exports = { getCategories, getReview };

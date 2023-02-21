@@ -2,7 +2,7 @@ const express = require("express");
 
 const db = require("./connection");
 
-const { getCategories } = require("./Controllers/app.controllers");
+const { getCategories, getComments } = require("./Controllers/app.controllers");
 const {
   handleServerError,
   handleCustomError,
@@ -11,6 +11,8 @@ const {
 const app = express();
 
 app.get("/api/categories", getCategories);
+
+app.get("/api/reviews/:review_id/comments", getComments);
 
 app.use(handleCustomError);
 

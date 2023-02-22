@@ -84,6 +84,7 @@ function updateReview(req, res, next) {
       res.status(200).send({ updatedReview });
     })
     .catch((err) => {
+      console.log(err);
       next(err);
     });
 }

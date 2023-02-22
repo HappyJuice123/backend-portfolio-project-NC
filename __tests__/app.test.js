@@ -170,6 +170,16 @@ describe("app", () => {
           expect(body.msg).toBe("Bad Request");
         });
     });
+    test("400: responds with bad request given an invalid key in updateReview", () => {
+      const updateReview = { count: 8 };
+      return request(app)
+        .patch("/api/reviews/1")
+        .send(updateReview)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Bad Request");
+        });
+    });
   });
 
   describe("/api/reviews/:review_id/comments", () => {

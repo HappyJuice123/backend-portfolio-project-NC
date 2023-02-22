@@ -3,7 +3,6 @@ const {
   fetchReviews,
   fetchReview,
   fetchComments,
-  addUser,
   addingComment,
 } = require("../Models/app.models");
 
@@ -61,13 +60,18 @@ function addComment(req, res, next) {
   const { review_id } = req.params;
   const { username, body } = req.body;
 
-  const addUserPromise = addUser(username);
-  const addCommentPromise = addingComment(review_id, username, body);
+  const reviewIdPromise = fetchReview(review_id);
+  const addingCommentPromise = addingComment(review_id, username, body);
 
-  Promise.all([addUserPromise, addCommentPromise]).then((result) => {
-    const addComment = result[1];
-    res.status(201).send({ addComment });
-  });
+  Promise.all([reviewIdPromise, addingCommentPromise])
+    .then((result) => {
+      const addComment = result[1];
+      res.status(201).send({ addComment });
+    })
+    .catch((err) => {
+      console.log(err);
+      next(err);
+    });
 }
 
 module.exports = {

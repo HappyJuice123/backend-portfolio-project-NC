@@ -60,27 +60,6 @@ function fetchComments(review_id) {
   });
 }
 
-function addUser(username) {
-  return db
-    .query(
-      `
-    INSERT INTO users
-    (username, name, avatar_url)
-    VALUES
-    ($1, $2, $3)
-    RETURNING *
-`,
-      [
-        username,
-        "jason",
-        "https://avatars.githubusercontent.com/u/9919?s=460&v=4",
-      ]
-    )
-    .then(({ rows }) => {
-      return rows[0];
-    });
-}
-
 function addingComment(review_id, username, body) {
   return db
     .query(
@@ -103,6 +82,5 @@ module.exports = {
   fetchReviews,
   fetchReview,
   fetchComments,
-  addUser,
   addingComment,
 };

@@ -8,6 +8,7 @@ const {
   getReview,
   getComments,
   addComment,
+  updateReview,
 } = require("./Controllers/app.controllers");
 
 const {
@@ -30,6 +31,8 @@ app.get("/api/reviews/:review_id", getReview);
 app.get("/api/reviews/:review_id/comments", getComments);
 
 app.post("/api/reviews/:review_id/comments", addComment);
+
+app.patch("/api/reviews/:review_id", updateReview);
 
 app.use(handle404NonExistentPaths);
 

@@ -5,6 +5,7 @@ const {
   fetchComments,
   addUser,
   addingComment,
+  updatedReview,
 } = require("../Models/app.models");
 
 function getCategories(req, res, next) {
@@ -64,10 +65,27 @@ function addComment(req, res, next) {
   const addUserPromise = addUser(username);
   const addCommentPromise = addingComment(review_id, username, body);
 
-  Promise.all([addUserPromise, addCommentPromise]).then((result) => {
-    const addComment = result[1];
-    res.status(201).send({ addComment });
-  });
+  Promise.all([addUserPromise, addCommentPromise])
+    .then((result) => {
+      const addComment = result[1];
+      res.status(201).send({ addComment });
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
+
+function updateReview(req, res, next) {
+  const { review_id } = req.params;
+  const { inc_votes } = req.body;
+
+  updatedReview(review_id, inc_votes)
+    .then((updatedReview) => {
+      res.status(200).send({ updatedReview });
+    })
+    .catch((err) => {
+      next(err);
+    });
 }
 
 module.exports = {
@@ -76,4 +94,5 @@ module.exports = {
   getReview,
   getComments,
   addComment,
+  updateReview,
 };

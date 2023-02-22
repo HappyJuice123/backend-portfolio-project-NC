@@ -163,6 +163,14 @@ describe("app", () => {
           expect(body.msg).toBe("Not Found");
         });
     });
+    test("400: responds with bad request given invalid review id", () => {
+      return request(app)
+        .patch("/api/reviews/invalidReviewId")
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Bad Request");
+        });
+    });
   });
 
   describe("/api/reviews/:review_id/comments", () => {

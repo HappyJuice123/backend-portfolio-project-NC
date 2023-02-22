@@ -60,4 +60,49 @@ function fetchComments(review_id) {
   });
 }
 
-module.exports = { fetchCategories, fetchReviews, fetchReview, fetchComments };
+function addUser(username) {
+  return db
+    .query(
+      `
+    INSERT INTO users
+    (username, name, avatar_url)
+    VALUES
+    ($1, $2, $3)
+    RETURNING *
+`,
+      [
+        username,
+        "jason",
+        "https://avatars.githubusercontent.com/u/9919?s=460&v=4",
+      ]
+    )
+    .then(({ rows }) => {
+      return rows[0];
+    });
+}
+
+function addingComment(review_id, username, body) {
+  return db
+    .query(
+      `
+      INSERT INTO comments
+      (body, votes, review_id, created_at, author)
+      VALUES
+      ($1, $2, $3, $4, (SELECT username FROM users WHERE username = $5))
+      RETURNING *
+      `,
+      [body, 0, review_id, new Date(1676994323752), username]
+    )
+    .then(({ rows }) => {
+      return rows[0];
+    });
+}
+
+module.exports = {
+  fetchCategories,
+  fetchReviews,
+  fetchReview,
+  fetchComments,
+  addUser,
+  addingComment,
+};

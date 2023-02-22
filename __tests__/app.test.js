@@ -3,7 +3,6 @@ const app = require("../db/app");
 const db = require("../db/connection");
 const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data/index");
-const convertTimestampToDate = require("../db/seeds/utils");
 
 afterAll(() => {
   return db.end();
@@ -160,6 +159,36 @@ describe("app", () => {
         .expect(200)
         .then(({ body }) => {
           expect(body.comments).toHaveLength(0);
+        });
+    });
+    test("201: POST - adds an object onto comments with the properties username and body and responds with the posted comment", () => {
+      const newComment = {
+        username: "HappyJuice123",
+        body: "i like umbrellas",
+      };
+
+      return request(app)
+        .post("/api/reviews/1/comments")
+        .send(newComment)
+        .expect(201)
+        .then(({ body }) => {
+          const { addComment } = body;
+          expect(addComment).toMatchObject({
+            comment_id: 7,
+            body: "i like umbrellas",
+            votes: expect.any(Number),
+            author: "HappyJuice123",
+            review_id: 1,
+            created_at: expect.any(String),
+          });
+        });
+    });
+    test("404: responds with msg when sent a query with a valid but non-existent review_id", () => {
+      return request(app)
+        .get("/api/reviews/50000/comments")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Not Found");
         });
     });
   });

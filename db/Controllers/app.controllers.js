@@ -31,6 +31,7 @@ function getReview(req, res, next) {
 }
 
 function getReviews(req, res, next) {
+  //   const { category } = req.query;
   fetchReviews()
     .then((reviews) => {
       res.status(200).send({ reviews });
@@ -84,7 +85,6 @@ function updateReview(req, res, next) {
       res.status(200).send({ updatedReview });
     })
     .catch((err) => {
-      console.log(err);
       next(err);
     });
 }

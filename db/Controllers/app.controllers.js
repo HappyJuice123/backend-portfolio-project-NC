@@ -6,6 +6,7 @@ const {
   addUser,
   addingComment,
   updatedReview,
+  fetchUsers,
 } = require("../Models/app.models");
 
 function getCategories(req, res, next) {
@@ -89,6 +90,16 @@ function updateReview(req, res, next) {
     });
 }
 
+function getUsers(req, res, next) {
+  fetchUsers()
+    .then((users) => {
+      res.status(200).send({ users });
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
+
 module.exports = {
   getCategories,
   getReviews,
@@ -96,4 +107,5 @@ module.exports = {
   getComments,
   addComment,
   updateReview,
+  getUsers,
 };

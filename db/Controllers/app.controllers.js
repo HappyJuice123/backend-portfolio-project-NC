@@ -5,6 +5,7 @@ const {
   fetchComments,
   addUser,
   addingComment,
+  fetchUsers,
 } = require("../Models/app.models");
 
 function getCategories(req, res, next) {
@@ -70,10 +71,17 @@ function addComment(req, res, next) {
   });
 }
 
+function getUsers(req, res, next) {
+  fetchUsers().then((users) => {
+    res.status(200).send({ users });
+  });
+}
+
 module.exports = {
   getCategories,
   getReviews,
   getReview,
   getComments,
   addComment,
+  getUsers,
 };

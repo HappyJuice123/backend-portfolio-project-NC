@@ -65,14 +65,17 @@ function addingComment(review_id, username, body) {
     .query(
       `
       INSERT INTO comments
-      (body, votes, review_id, created_at, author)
+      (body, review_id, author)
       VALUES
-      ($1, $2, $3, $4, (SELECT username FROM users WHERE username = $5))
+      ($1, $2, $3)
       RETURNING *
       `,
-      [body, 0, review_id, new Date(1676994323752), username]
+      [body, review_id, username]
     )
     .then(({ rows }) => {
+      if (!rows) {
+        return Promise.reject("Invalid input");
+      }
       return rows[0];
     });
 }

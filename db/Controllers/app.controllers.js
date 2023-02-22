@@ -60,16 +60,12 @@ function addComment(req, res, next) {
   const { review_id } = req.params;
   const { username, body } = req.body;
 
-  const reviewIdPromise = fetchReview(review_id);
-  const addingCommentPromise = addingComment(review_id, username, body);
-
-  Promise.all([reviewIdPromise, addingCommentPromise])
+  addingComment(review_id, username, body)
     .then((result) => {
-      const addComment = result[1];
+      const addComment = result;
       res.status(201).send({ addComment });
     })
     .catch((err) => {
-      console.log(err);
       next(err);
     });
 }

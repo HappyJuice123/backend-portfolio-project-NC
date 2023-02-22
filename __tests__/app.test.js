@@ -207,7 +207,7 @@ describe("app", () => {
         });
     });
 
-    test("404: POST - responds with msg when sent a query with a valid but non-existent review_id", () => {
+    test("400: POST - responds with msg when sent a query with a valid but non-existent review_id", () => {
       const newComment = {
         username: "mallionaire",
         body: "i like cats",
@@ -216,9 +216,23 @@ describe("app", () => {
       return request(app)
         .post("/api/reviews/50000/comments")
         .send(newComment)
-        .expect(404)
+        .expect(400)
         .then(({ body }) => {
-          expect(body.msg).toBe("Not Found");
+          expect(body.msg).toBe("Bad Request");
+        });
+    });
+    test("400: POST - responds with msg when sent a query with a username that does not exist", () => {
+      const newComment = {
+        username: "hello123",
+        body: "i like cats",
+      };
+
+      return request(app)
+        .post("/api/reviews/1/comments")
+        .send(newComment)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Bad Request");
         });
     });
     test("400: POST - responds with bad request given a missing property in new comment", () => {

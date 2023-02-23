@@ -73,9 +73,6 @@ function addingComment(review_id, username, body) {
       [body, review_id, username]
     )
     .then(({ rows }) => {
-      if (!rows) {
-        return Promise.reject("Invalid input");
-      }
       return rows[0];
     });
 }

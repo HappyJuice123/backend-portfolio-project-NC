@@ -1,10 +1,9 @@
 \c nc_games_test
 
-SELECT * FROM users;
-SELECT * FROM comments;
-
-INSERT INTO comments
-(body, votes, review_id, created_at, author)
-VALUES
-('hello', 0, 1, '2017-11-22 12:43:33.389', (SELECT username FROM users WHERE username = 'HappyJuice123'))
-RETURNING *;
+SELECT reviews.review_id, reviews.title, reviews.designer, reviews.owner, reviews.review_img_url, reviews.review_body, reviews.category, reviews.created_at, reviews.votes, COUNT(comments.review_id) AS comment_count
+          FROM reviews
+          LEFT JOIN comments
+          ON reviews.review_id = comments.review_id
+          WHERE reviews.review_id = 1
+          GROUP BY reviews.review_id
+          ORDER BY reviews.created_at DESC;

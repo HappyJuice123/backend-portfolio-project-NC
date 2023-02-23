@@ -15,6 +15,12 @@ exports.handlePSQL400s = (err, req, res, next) => {
 exports.handleCustomError = (err, req, res, next) => {
   if (err === "review_id not found") {
     res.status(404).send({ msg: "Not Found" });
+  } else if (err === "Invalid query") {
+    res.status(400).send({ msg: "Bad Request" });
+  } else if (err === "No reviews found") {
+    res.status(404).send({ msg: err });
+  } else if (err === "no category found") {
+    res.status(404).send({ msg: err });
   } else {
     next(err);
   }

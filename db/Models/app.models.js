@@ -185,6 +185,18 @@ function updatedReview(review_id, inc_votes) {
     });
 }
 
+function fetchUsers() {
+  return db
+    .query(
+      `
+    SELECT * FROM users;
+    `
+    )
+    .then(({ rows }) => {
+      return rows;
+    });
+}
+
 module.exports = {
   fetchCategories,
   fetchReviews,
@@ -194,4 +206,5 @@ module.exports = {
   addingComment,
   updatedReview,
   selectReviewByCategory,
+  fetchUsers,
 };

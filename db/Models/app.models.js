@@ -55,11 +55,43 @@ function fetchReviews(category, sort_by = "created_at", order = "DESC") {
 
   if (orderOption) {
     queryStr += ` ${order}`;
+  } else {
+    return Promise.reject("Invalid query");
+  }
+
+  return db.query(queryStr, queryParams).then(({ rows }) => {
+    return rows;
+  });
+}
+
+function selectReviewByCategory(category) {
+  let queryStr = "SELECT * FROM categories";
+
+  const queryParams = [];
+
+  const validCategoryOptions = [
+    "euro game",
+    "social deduction",
+    "dexterity",
+    "children's games",
+  ];
+
+  const categoryOption = validCategoryOptions.find(
+    (option) => option === category
+  );
+
+  if (categoryOption) {
+    queryStr += " WHERE slug = $1";
+    queryParams.push(category);
+  }
+
+  if (category && !categoryOption) {
+    return Promise.reject("Invalid query");
   }
 
   return db.query(queryStr, queryParams).then(({ rows }) => {
     if (rows.length === 0) {
-      return Promise.reject("Invalid query");
+      return Promise.reject("No category found");
     }
     return rows;
   });
@@ -161,4 +193,5 @@ module.exports = {
   addUser,
   addingComment,
   updatedReview,
+  selectReviewByCategory,
 };

@@ -6,6 +6,7 @@ const {
   addUser,
   addingComment,
   updatedReview,
+  selectReviewByCategory,
 } = require("../Models/app.models");
 
 function getCategories(req, res, next) {
@@ -33,8 +34,12 @@ function getReview(req, res, next) {
 function getReviews(req, res, next) {
   const { category, sort_by, order } = req.query;
 
-  fetchReviews(category, sort_by, order)
-    .then((reviews) => {
+  const checkCategory = selectReviewByCategory(category);
+  const getReviews = fetchReviews(category, sort_by, order);
+
+  Promise.all([checkCategory, getReviews])
+    .then((result) => {
+      const reviews = result[1];
       res.status(200).send({ reviews });
     })
     .catch((err) => {

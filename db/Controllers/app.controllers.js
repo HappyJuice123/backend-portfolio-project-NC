@@ -5,6 +5,7 @@ const {
   fetchComments,
   addingComment,
   updatedReview,
+  selectReviewByCategory,
   fetchUsers,
 } = require("../Models/app.models");
 
@@ -31,8 +32,14 @@ function getReview(req, res, next) {
 }
 
 function getReviews(req, res, next) {
-  fetchReviews()
-    .then((reviews) => {
+  const { category, sort_by, order } = req.query;
+
+  const checkCategory = selectReviewByCategory(category);
+  const getReviews = fetchReviews(category, sort_by, order);
+
+  Promise.all([checkCategory, getReviews])
+    .then((result) => {
+      const reviews = result[1];
       res.status(200).send({ reviews });
     })
     .catch((err) => {
@@ -82,7 +89,6 @@ function updateReview(req, res, next) {
       res.status(200).send({ updatedReview });
     })
     .catch((err) => {
-      console.log(err);
       next(err);
     });
 }

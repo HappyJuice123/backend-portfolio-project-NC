@@ -19,6 +19,12 @@ exports.handleCustomError = (err, req, res, next) => {
     res.status(404).send({ msg: "Not Found" });
   } else if (err === "Invalid input") {
     res.status(400).send({ msg: "Bad Request" });
+  } else if (err === "Invalid query") {
+    res.status(400).send({ msg: "Bad Request" });
+  } else if (err === "No reviews found") {
+    res.status(404).send({ msg: err });
+  } else if (err === "no category found") {
+    res.status(404).send({ msg: err });
   } else {
     next(err);
   }

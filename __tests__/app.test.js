@@ -406,4 +406,30 @@ describe("app", () => {
         });
     });
   });
+  describe("/api/comments/:comment_id", () => {
+    test("204: responds with status code 204 returning nothing", () => {
+      return request(app)
+        .delete("/api/comments/2")
+        .expect(204)
+        .then((response) => {
+          expect(response.res.statusMessage).toBe("No Content");
+        });
+    });
+    test("404: responds with a msg of comment_id does not exist when given a valid but non-existent comment id", () => {
+      return request(app)
+        .delete("/api/comments/2222")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("comment_id does not exist");
+        });
+    });
+    test("400: responds with a msg of Bad Request when given a non valid comment_id", () => {
+      return request(app)
+        .delete("/api/comments/notAValidCommentId")
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Bad Request");
+        });
+    });
+  });
 });

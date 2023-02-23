@@ -92,29 +92,65 @@ describe("app", () => {
           expect(reviewsSorted).toEqual(reviews);
         });
     });
-    // test("200: GET - responds with reviews filtered by category", () => {
-    //   return request(app)
-    //     .get("/api/reviews?category=social deduction")
-    //     .expect(200)
-    //     .then(({ body }) => {
-    //       const { filteredReviews } = body;
-    //       expect(filteredReviews).toHaveLength(11);
-    //       filteredReviews.forEach((filteredReview) => {
-    //         expect(filteredReview).toMatchObject({
-    //           review_id: expect.any(Number),
-    //           title: expect.any(String),
-    //           designer: expect.any(String),
-    //           owner: expect.any(String),
-    //           review_img_url: expect.any(String),
-    //           review_body: expect.any(String),
-    //           category: expect.any(String),
-    //           created_at: expect.any(String),
-    //           votes: expect.any(Number),
-    //           comment_count: expect.any(String),
-    //         });
-    //       });
-    //     });
-    // });
+    test("200: GET - responds with reviews filtered by category", () => {
+      return request(app)
+        .get("/api/reviews?category=social deduction")
+        .expect(200)
+        .then(({ body }) => {
+          const { reviews } = body;
+          expect(reviews).toHaveLength(11);
+          reviews.forEach((review) => {
+            expect(review).toMatchObject({
+              review_id: expect.any(Number),
+              title: expect.any(String),
+              designer: expect.any(String),
+              owner: expect.any(String),
+              review_img_url: expect.any(String),
+              review_body: expect.any(String),
+              category: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+              comment_count: expect.any(String),
+            });
+          });
+        });
+    });
+    test("400: GET - responds with a msg of Bad Request if given an invalid category", () => {
+      return request(app)
+        .get("/api/reviews?category=notACategory")
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Bad Request");
+        });
+    });
+    test("200: GET - responds with reviews sorted by any valid column", () => {
+      return request(app)
+        .get("/api/reviews?sort_by=title")
+        .expect(200)
+        .then(({ body }) => {
+          const { reviews } = body;
+          expect(reviews).toHaveLength(13);
+          expect(reviews).toBeSortedBy("title", { descending: true });
+        });
+    });
+    test("400: GET - responds with a msg of Bad Request if given an invalid sort_by column", () => {
+      return request(app)
+        .get("/api/reviews?sort_by=notAColumn")
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Bad Request");
+        });
+    });
+    test("200: GET - responds with reviews sorted by a valid column in ascending order", () => {
+      return request(app)
+        .get("/api/reviews?sort_by=owner&order=ASC")
+        .expect(200)
+        .then(({ body }) => {
+          const { reviews } = body;
+          expect(reviews).toHaveLength(13);
+          expect(reviews).toBeSortedBy("owner", { descending: false });
+        });
+    });
   });
   describe("/api/reviews/:review_id", () => {
     test("200: GET - responds with reviews only with the review_id given", () => {

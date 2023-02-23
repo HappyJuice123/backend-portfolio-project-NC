@@ -271,7 +271,7 @@ describe("app", () => {
           expect(body.msg).toBe("Not Found");
         });
     });
-    test("404: POST - responds with msg when sent a query with a non-valid review_id", () => {
+    test("400: POST - responds with msg when sent a query with a non-valid review_id", () => {
       const newComment = {
         username: "mallionaire",
         body: "i like cats",

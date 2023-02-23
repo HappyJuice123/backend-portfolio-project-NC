@@ -115,20 +115,20 @@ describe("app", () => {
           });
         });
     });
-    test("404: GET - responds with a msg of Bad Request if given an invalid category", () => {
+    test("400: GET - responds with a msg of no bad request if given an invalid category", () => {
       return request(app)
         .get("/api/reviews?category=notACategory")
-        .expect(404)
+        .expect(400)
         .then(({ body }) => {
-          expect(body.msg).toBe("No reviews found");
+          expect(body.msg).toBe("Bad Request");
         });
     });
-    test('404: GET - responds with a msg of "no reviews found" if given a valid category but has no reviews', () => {
+    test('200: GET - responds with a msg of "no reviews found" if given a valid category but has no reviews', () => {
       return request(app)
         .get("/api/reviews?category=children's games")
-        .expect(404)
+        .expect(200)
         .then(({ body }) => {
-          expect(body.msg).toBe("No reviews found");
+          expect(body.reviews).toHaveLength(0);
         });
     });
     test("200: GET - responds with reviews sorted by any valid column", () => {

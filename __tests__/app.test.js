@@ -122,12 +122,62 @@ describe("app", () => {
           expect(body.msg).toBe("Bad Request");
         });
     });
-    test("404: responds with msg when sent a query with a valid but non-existent review_id", () => {
+    test("404: GET - responds with msg when sent a query with a valid but non-existent review_id", () => {
       return request(app)
         .get("/api/reviews/50000")
         .expect(404)
         .then(({ body }) => {
           expect(body.msg).toBe("Not Found");
+        });
+    });
+    test("200: PATCH - responds with the updated review", () => {
+      const updateReview = { inc_votes: 8 };
+      return request(app)
+        .patch("/api/reviews/1")
+        .send(updateReview)
+        .expect(200)
+        .then(({ body }) => {
+          const { updatedReview } = body;
+          expect(updatedReview).toMatchObject({
+            review_id: 1,
+            title: "Agricola",
+            designer: "Uwe Rosenberg",
+            owner: "mallionaire",
+            review_img_url:
+              "https://images.pexels.com/photos/974314/pexels-photo-974314.jpeg?w=700&h=700",
+            review_body: "Farmyard fun!",
+            category: "euro game",
+            created_at: new Date(1610964020514).toISOString(),
+            votes: 9,
+          });
+        });
+    });
+    test("404: PATCH - responds with msg when sent a query with a valid but non-existent review_id", () => {
+      const updateReview = { inc_votes: 8 };
+      return request(app)
+        .patch("/api/reviews/50000")
+        .send(updateReview)
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Not Found");
+        });
+    });
+    test("400: responds with bad request given invalid review id", () => {
+      return request(app)
+        .patch("/api/reviews/invalidReviewId")
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Bad Request");
+        });
+    });
+    test("400: responds with bad request given an invalid key in updateReview", () => {
+      const updateReview = { count: 8 };
+      return request(app)
+        .patch("/api/reviews/1")
+        .send(updateReview)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Bad Request");
         });
     });
   });
@@ -245,6 +295,24 @@ describe("app", () => {
         .expect(400)
         .then(({ body }) => {
           expect(body.msg).toBe("Bad Request");
+        });
+    });
+  });
+  describe("/api/users", () => {
+    test("200: GET - responds with an array of users", () => {
+      return request(app)
+        .get("/api/users")
+        .expect(200)
+        .then(({ body }) => {
+          const { users } = body;
+          expect(users).toHaveLength(4);
+          users.forEach((user) => {
+            expect(user).toMatchObject({
+              username: expect.any(String),
+              name: expect.any(String),
+              avatar_url: expect.any(String),
+            });
+          });
         });
     });
   });

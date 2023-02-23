@@ -7,8 +7,11 @@ exports.handlePSQL400s = (err, req, res, next) => {
     res.status(400).send({ msg: "Bad Request" });
   } else if (err.code === "23502") {
     res.status(400).send({ msg: "Bad Request" });
+<<<<<<< HEAD
   } else if (err.code === "23503") {
     res.status(400).send({ msg: "Bad Request" });
+=======
+>>>>>>> 7c00c948b7b310f2b8334f1132d9da964c7f5864
   } else {
     next(err);
   }

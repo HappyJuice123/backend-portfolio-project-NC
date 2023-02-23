@@ -3,7 +3,6 @@ const {
   fetchReviews,
   fetchReview,
   fetchComments,
-  addUser,
   addingComment,
   updatedReview,
   selectReviewByCategory,
@@ -70,15 +69,13 @@ function addComment(req, res, next) {
   const { review_id } = req.params;
   const { username, body } = req.body;
 
-  const addUserPromise = addUser(username);
-  const addCommentPromise = addingComment(review_id, username, body);
-
-  Promise.all([addUserPromise, addCommentPromise])
+  addingComment(review_id, username, body)
     .then((result) => {
-      const addComment = result[1];
+      const addComment = result;
       res.status(201).send({ addComment });
     })
     .catch((err) => {
+      console.log(err);
       next(err);
     });
 }

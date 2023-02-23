@@ -75,7 +75,6 @@ function addComment(req, res, next) {
       res.status(201).send({ addComment });
     })
     .catch((err) => {
-      console.log(err);
       next(err);
     });
 }

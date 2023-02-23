@@ -186,6 +186,7 @@ describe("app", () => {
             category: "euro game",
             created_at: new Date(1610964020514).toISOString(),
             votes: 1,
+            comment_count: "0",
           });
         });
     });

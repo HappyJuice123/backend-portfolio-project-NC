@@ -98,13 +98,21 @@ function selectReviewByCategory(category) {
 }
 
 function fetchReview(review_id) {
-  let queryStr = "SELECT * FROM reviews";
+  let queryStr = `SELECT reviews.review_id, reviews.title, reviews.designer, reviews.owner, reviews.review_img_url, reviews.review_body, reviews.category, reviews.created_at, reviews.votes, COUNT(comments.review_id) AS comment_count
+  FROM reviews
+  LEFT JOIN comments
+  ON reviews.review_id = comments.review_id`;
+
   const queryParams = [];
 
   if (review_id) {
-    queryStr += " WHERE review_id = $1";
+    queryStr += " WHERE reviews.review_id = $1";
     queryParams.push(review_id);
   }
+
+  queryStr += " GROUP BY reviews.review_id";
+
+  console.log(queryStr);
 
   return db.query(queryStr, queryParams).then(({ rows }) => {
     if (rows.length === 0) {

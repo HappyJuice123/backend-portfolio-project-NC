@@ -115,12 +115,20 @@ describe("app", () => {
           });
         });
     });
-    test("400: GET - responds with a msg of Bad Request if given an invalid category", () => {
+    test("404: GET - responds with a msg of Bad Request if given an invalid category", () => {
       return request(app)
         .get("/api/reviews?category=notACategory")
-        .expect(400)
+        .expect(404)
         .then(({ body }) => {
-          expect(body.msg).toBe("Bad Request");
+          expect(body.msg).toBe("No reviews found");
+        });
+    });
+    test('404: GET - responds with a msg of "no reviews found" if given a valid category but has no reviews', () => {
+      return request(app)
+        .get("/api/reviews?category=children's games")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("No reviews found");
         });
     });
     test("200: GET - responds with reviews sorted by any valid column", () => {
@@ -149,6 +157,14 @@ describe("app", () => {
           const { reviews } = body;
           expect(reviews).toHaveLength(13);
           expect(reviews).toBeSortedBy("owner", { descending: false });
+        });
+    });
+    test("400: GET - responds with a msg of Bad Request if given an invalid order query", () => {
+      return request(app)
+        .get("/api/reviews?sort_by=owner&order=invalidOrderQuery")
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Bad Request");
         });
     });
   });

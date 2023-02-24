@@ -9,6 +9,7 @@ const {
   selectReviewByCategory,
   fetchUsers,
   removeComment,
+  fetchUser,
 } = require("../Models/app.models");
 
 function getCategories(req, res, next) {
@@ -104,6 +105,18 @@ function getUsers(req, res, next) {
     });
 }
 
+function getUser(req, res, next) {
+  const { username } = req.params;
+
+  fetchUser(username)
+    .then((user) => {
+      res.status(200).send({ user });
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
+
 function deleteComment(req, res, next) {
   const { comment_id } = req.params;
 
@@ -141,4 +154,5 @@ module.exports = {
   getUsers,
   deleteComment,
   getEndpoints,
+  getUser,
 };

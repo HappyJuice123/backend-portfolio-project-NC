@@ -427,6 +427,30 @@ describe("app", () => {
         });
     });
   });
+  describe("/api/users/:username", () => {
+    test("200: GET - responds with an array of a user with the given username", () => {
+      return request(app)
+        .get("/api/users/mallionaire")
+        .expect(200)
+        .then(({ body }) => {
+          const { user } = body;
+          expect(user).toEqual({
+            username: "mallionaire",
+            name: "haz",
+            avatar_url:
+              "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg",
+          });
+        });
+    });
+    test("404: GET - responds with a msg when passed a username that does not exist", () => {
+      return request(app)
+        .get("/api/users/notAUser")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("username does not exist");
+        });
+    });
+  });
   describe("/api/comments/:comment_id", () => {
     test("204: responds with status code 204 returning nothing", () => {
       return request(app)

@@ -182,6 +182,23 @@ function fetchUsers() {
     });
 }
 
+function fetchUser(username) {
+  let queryStr = `SELECT * FROM users`;
+  const queryParams = [];
+
+  if (username) {
+    queryStr += ` WHERE username = $1`;
+    queryParams.push(username);
+  }
+
+  return db.query(queryStr, queryParams).then(({ rows }) => {
+    if (rows.length === 0) {
+      return Promise.reject("username does not exist");
+    }
+    return rows[0];
+  });
+}
+
 function removeComment(comment_id) {
   return db
     .query(
@@ -210,4 +227,5 @@ module.exports = {
   selectReviewByCategory,
   fetchUsers,
   removeComment,
+  fetchUser,
 };

@@ -1,3 +1,4 @@
+const fs = require("fs/promises");
 const {
   fetchCategories,
   fetchReviews,
@@ -115,6 +116,21 @@ function deleteComment(req, res, next) {
     });
 }
 
+function getEndpoints(req, res, next) {
+  return fs
+    .readFile(`${__dirname}/../../endpoints.json`, "utf8")
+    .then((result) => {
+      return JSON.parse(result);
+    })
+    .then((endpoints) => {
+      res.status(200).send({ endpoints });
+    })
+    .catch((err) => {
+      console.log(err);
+      next(err);
+    });
+}
+
 module.exports = {
   getCategories,
   getReviews,
@@ -124,4 +140,5 @@ module.exports = {
   updateReview,
   getUsers,
   deleteComment,
+  getEndpoints,
 };

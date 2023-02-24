@@ -112,8 +112,6 @@ function fetchReview(review_id) {
 
   queryStr += " GROUP BY reviews.review_id";
 
-  console.log(queryStr);
-
   return db.query(queryStr, queryParams).then(({ rows }) => {
     if (rows.length === 0) {
       return Promise.reject("review_id not found");

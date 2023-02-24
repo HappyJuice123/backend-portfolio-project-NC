@@ -1,5 +1,4 @@
 const db = require("../connection");
-const fs = require("fs/promises");
 
 function fetchCategories() {
   return db
@@ -201,15 +200,6 @@ function removeComment(comment_id) {
     });
 }
 
-function fetchEndpoints() {
-  return fs
-    .readFile(`${__dirname}/../../endpoints.json`, "utf8")
-    .then((result) => {
-      console.log(JSON.parse(result));
-      return JSON.parse(result);
-    });
-}
-
 module.exports = {
   fetchCategories,
   fetchReviews,
@@ -220,5 +210,4 @@ module.exports = {
   selectReviewByCategory,
   fetchUsers,
   removeComment,
-  fetchEndpoints,
 };

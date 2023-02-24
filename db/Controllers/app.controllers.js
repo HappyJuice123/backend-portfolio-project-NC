@@ -1,3 +1,4 @@
+const fs = require("fs/promises");
 const {
   fetchCategories,
   fetchReviews,
@@ -8,7 +9,6 @@ const {
   selectReviewByCategory,
   fetchUsers,
   removeComment,
-  fetchEndpoints,
 } = require("../Models/app.models");
 
 function getCategories(req, res, next) {
@@ -117,7 +117,11 @@ function deleteComment(req, res, next) {
 }
 
 function getEndpoints(req, res, next) {
-  fetchEndpoints()
+  return fs
+    .readFile(`${__dirname}/../../endpoints.json`, "utf8")
+    .then((result) => {
+      return JSON.parse(result);
+    })
     .then((endpoints) => {
       res.status(200).send({ endpoints });
     })

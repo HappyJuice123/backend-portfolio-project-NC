@@ -8,6 +8,7 @@ const {
   selectReviewByCategory,
   fetchUsers,
   removeComment,
+  fetchEndpoints,
 } = require("../Models/app.models");
 
 function getCategories(req, res, next) {
@@ -115,6 +116,17 @@ function deleteComment(req, res, next) {
     });
 }
 
+function getEndpoints(req, res, next) {
+  fetchEndpoints()
+    .then((endpoints) => {
+      res.status(200).send({ endpoints });
+    })
+    .catch((err) => {
+      console.log(err);
+      next(err);
+    });
+}
+
 module.exports = {
   getCategories,
   getReviews,
@@ -124,4 +136,5 @@ module.exports = {
   updateReview,
   getUsers,
   deleteComment,
+  getEndpoints,
 };

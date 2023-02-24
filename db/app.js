@@ -11,6 +11,7 @@ const {
   updateReview,
   getUsers,
   deleteComment,
+  getEndpoints,
 } = require("./Controllers/app.controllers");
 
 const {
@@ -23,6 +24,8 @@ const {
 const app = express();
 
 app.use(express.json());
+
+app.get("/api", getEndpoints);
 
 app.get("/api/categories", getCategories);
 

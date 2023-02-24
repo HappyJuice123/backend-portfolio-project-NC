@@ -1,4 +1,5 @@
 const db = require("../connection");
+const fs = require("fs/promises");
 
 function fetchCategories() {
   return db
@@ -112,8 +113,6 @@ function fetchReview(review_id) {
 
   queryStr += " GROUP BY reviews.review_id";
 
-  console.log(queryStr);
-
   return db.query(queryStr, queryParams).then(({ rows }) => {
     if (rows.length === 0) {
       return Promise.reject("review_id not found");
@@ -202,6 +201,15 @@ function removeComment(comment_id) {
     });
 }
 
+function fetchEndpoints() {
+  return fs
+    .readFile(`${__dirname}/../../endpoints.json`, "utf8")
+    .then((result) => {
+      console.log(JSON.parse(result));
+      return JSON.parse(result);
+    });
+}
+
 module.exports = {
   fetchCategories,
   fetchReviews,
@@ -212,4 +220,5 @@ module.exports = {
   selectReviewByCategory,
   fetchUsers,
   removeComment,
+  fetchEndpoints,
 };

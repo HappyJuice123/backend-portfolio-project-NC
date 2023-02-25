@@ -452,7 +452,7 @@ describe("app", () => {
     });
   });
   describe("/api/comments/:comment_id", () => {
-    test("204: responds with status code 204 returning nothing", () => {
+    test("204: DELETE - responds with status code 204 returning nothing", () => {
       return request(app)
         .delete("/api/comments/2")
         .expect(204)
@@ -460,7 +460,7 @@ describe("app", () => {
           expect(response.res.statusMessage).toBe("No Content");
         });
     });
-    test("404: responds with a msg of comment_id does not exist when given a valid but non-existent comment id", () => {
+    test("404: DELETE - responds with a msg of comment_id does not exist when given a valid but non-existent comment id", () => {
       return request(app)
         .delete("/api/comments/2222")
         .expect(404)
@@ -468,9 +468,58 @@ describe("app", () => {
           expect(body.msg).toBe("comment_id does not exist");
         });
     });
-    test("400: responds with a msg of Bad Request when given a non valid comment_id", () => {
+    test("400: DELETE - responds with a msg of Bad Request when given a non valid comment_id", () => {
       return request(app)
         .delete("/api/comments/notAValidCommentId")
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Bad Request");
+        });
+    });
+    test("200: PATCH - responds with an object with the number of votes updated on the comment when a given a number to increase the vote by", () => {
+      const incVote = { inc_votes: 1 };
+
+      return request(app)
+        .patch("/api/comments/3")
+        .send(incVote)
+        .expect(200)
+        .then(({ body }) => {
+          const { comment } = body;
+          expect(comment).toEqual({
+            comment_id: 3,
+            body: "I didn't know dogs could play games",
+            votes: 11,
+            author: "philippaclaire9",
+            review_id: 3,
+            created_at: new Date(1610964588110).toISOString(),
+          });
+        });
+    });
+    test("400: PATCH - responds with a msg of Bad Request when given a non valid comment_id", () => {
+      const incVote = { inc_votes: 1 };
+      return request(app)
+        .patch("/api/comments/notAValidCommentId")
+        .send(incVote)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Bad Request");
+        });
+    });
+    test("404: PATCH - responds with a msg of comment_id does not exist when given a valid but non-existent comment id", () => {
+      const incVote = { inc_votes: 1 };
+      return request(app)
+        .patch("/api/comments/2222")
+        .send(incVote)
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("comment_id does not exist");
+        });
+    });
+    test("400: PATCH - responds with a msg of bad request when given non integer for the inc_votes value", () => {
+      const incVote = { inc_votes: "notAInteger" };
+      return request(app)
+        .patch("/api/comments/3")
+        .send(incVote)
         .expect(400)
         .then(({ body }) => {
           expect(body.msg).toBe("Bad Request");

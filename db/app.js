@@ -13,6 +13,7 @@ const {
   deleteComment,
   getEndpoints,
   getUser,
+  updateVote,
 } = require("./Controllers/app.controllers");
 
 const {
@@ -26,10 +27,13 @@ const app = express();
 
 app.use(express.json());
 
+// EndPoints
 app.get("/api", getEndpoints);
 
+// Categories
 app.get("/api/categories", getCategories);
 
+// Reviews
 app.get("/api/reviews", getReviews);
 
 app.get("/api/reviews/:review_id", getReview);
@@ -40,11 +44,15 @@ app.post("/api/reviews/:review_id/comments", addComment);
 
 app.patch("/api/reviews/:review_id", updateReview);
 
+// Users
 app.get("/api/users", getUsers);
 
 app.get("/api/users/:username", getUser);
 
+// Comments
 app.delete("/api/comments/:comment_id", deleteComment);
+
+app.patch("/api/comments/:comment_id", updateVote);
 
 app.use(handle404NonExistentPaths);
 

@@ -10,6 +10,7 @@ const {
   fetchUsers,
   removeComment,
   fetchUser,
+  addVote,
 } = require("../Models/app.models");
 
 function getCategories(req, res, next) {
@@ -144,6 +145,19 @@ function getEndpoints(req, res, next) {
     });
 }
 
+function updateVote(req, res, next) {
+  const { inc_votes } = req.body;
+  const { comment_id } = req.params;
+
+  addVote(inc_votes, comment_id)
+    .then((comment) => {
+      res.status(200).send({ comment });
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
+
 module.exports = {
   getCategories,
   getReviews,
@@ -155,4 +169,5 @@ module.exports = {
   deleteComment,
   getEndpoints,
   getUser,
+  updateVote,
 };

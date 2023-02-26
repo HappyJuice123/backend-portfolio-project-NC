@@ -188,6 +188,102 @@ describe("app", () => {
           expect(body.msg).toBe("Bad Request");
         });
     });
+    test("201: POST - responds with an object of the newly added review", () => {
+      newReview = {
+        title: "Catan",
+        designer: "Klaus Teuber",
+        owner: "mallionaire",
+        review_body: "Building fun!",
+        category: "euro game",
+        review_img_url:
+          "https://preview.redd.it/avjpjuwxwe841.jpg?width=1440&format=pjpg&auto=webp&v=enabled&s=dababb7ed0ae76c63e68039e084bdc2691dd5919",
+      };
+      return request(app)
+        .post("/api/reviews")
+        .send(newReview)
+        .expect(201)
+        .then(({ body }) => {
+          const { newReview } = body;
+
+          expect(newReview).toMatchObject({
+            review_id: expect.any(Number),
+            title: "Catan",
+            designer: "Klaus Teuber",
+            owner: "mallionaire",
+            review_body: "Building fun!",
+            category: "euro game",
+            review_img_url: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            comment_count: expect.any(String),
+          });
+        });
+    });
+    test("201: POST - responds with an object of the newly added review with the review_img_url defaulting if it is not given", () => {
+      newReview = {
+        title: "Catan",
+        designer: "Klaus Teuber",
+        owner: "mallionaire",
+        review_body: "Building fun!",
+        category: "euro game",
+      };
+      return request(app)
+        .post("/api/reviews")
+        .send(newReview)
+        .expect(201)
+        .then(({ body }) => {
+          const { newReview } = body;
+
+          expect(newReview).toMatchObject({
+            review_id: expect.any(Number),
+            title: "Catan",
+            designer: "Klaus Teuber",
+            owner: "mallionaire",
+            review_body: "Building fun!",
+            category: "euro game",
+            review_img_url:
+              "https://images.pexels.com/photos/974314/pexels-photo-974314.jpeg?w=700&h=700",
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            comment_count: expect.any(String),
+          });
+        });
+    });
+    test("404: POST - responds with a msg of not found when given an owner that does not exist", () => {
+      newReview = {
+        title: "Catan",
+        designer: "Klaus Teuber",
+        owner: "NotAOwner",
+        review_body: "Building fun!",
+        category: "euro game",
+        review_img_url:
+          "https://preview.redd.it/avjpjuwxwe841.jpg?width=1440&format=pjpg&auto=webp&v=enabled&s=dababb7ed0ae76c63e68039e084bdc2691dd5919",
+      };
+      return request(app)
+        .post("/api/reviews")
+        .send(newReview)
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Not Found");
+        });
+    });
+    test("400: POST - responds with a msg of bad request when given a missing property", () => {
+      newReview = {
+        title: "Catan",
+        designer: "Klaus Teuber",
+        review_body: "Building fun!",
+        category: "euro game",
+        review_img_url:
+          "https://preview.redd.it/avjpjuwxwe841.jpg?width=1440&format=pjpg&auto=webp&v=enabled&s=dababb7ed0ae76c63e68039e084bdc2691dd5919",
+      };
+      return request(app)
+        .post("/api/reviews")
+        .send(newReview)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Bad Request");
+        });
+    });
   });
   describe("/api/reviews/:review_id", () => {
     test("200: GET - responds with reviews only with the review_id given", () => {

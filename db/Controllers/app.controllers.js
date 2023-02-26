@@ -11,6 +11,7 @@ const {
   removeComment,
   fetchUser,
   addVote,
+  insertReview,
 } = require("../Models/app.models");
 
 function getCategories(req, res, next) {
@@ -45,6 +46,19 @@ function getReviews(req, res, next) {
     .then((result) => {
       const reviews = result[1];
       res.status(200).send({ reviews });
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
+
+function addReview(req, res, next) {
+  const { title, designer, owner, review_body, category, review_img_url } =
+    req.body;
+
+  insertReview(title, designer, owner, review_body, category, review_img_url)
+    .then((newReview) => {
+      res.status(201).send({ newReview });
     })
     .catch((err) => {
       next(err);
@@ -170,4 +184,5 @@ module.exports = {
   getEndpoints,
   getUser,
   updateVote,
+  addReview,
 };

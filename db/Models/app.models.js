@@ -120,6 +120,43 @@ function fetchReview(review_id) {
   });
 }
 
+function insertReview(
+  title,
+  designer,
+  owner,
+  review_body,
+  category,
+  review_img_url = "https://images.pexels.com/photos/974314/pexels-photo-974314.jpeg?w=700&h=700"
+) {
+  return db
+    .query(
+      `
+  INSERT INTO reviews
+  (title, designer, owner, review_body, category, review_img_url)
+  VALUES
+  ($1, $2, $3, $4, $5, $6)
+  RETURNING *
+  `,
+      [title, designer, owner, review_body, category, review_img_url]
+    )
+    .then(() => {
+      return db.query(
+        `
+      SELECT reviews.review_id, reviews.title, reviews.designer, reviews.owner, reviews.review_img_url, reviews.review_body, reviews.category, reviews.created_at, reviews.votes, COUNT(comments.review_id) AS comment_count
+  FROM reviews
+  LEFT JOIN comments
+  ON reviews.review_id = comments.review_id
+  WHERE reviews.title = $1
+  GROUP BY reviews.review_id
+      `,
+        [title]
+      );
+    })
+    .then(({ rows }) => {
+      return rows[0];
+    });
+}
+
 function fetchComments(review_id) {
   let queryStr = "SELECT * FROM comments";
   const queryParams = [];
@@ -248,4 +285,5 @@ module.exports = {
   removeComment,
   fetchUser,
   addVote,
+  insertReview,
 };

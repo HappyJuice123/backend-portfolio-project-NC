@@ -12,8 +12,15 @@ function fetchCategories() {
     });
 }
 
-function fetchReviews(category, sort_by = "created_at", order = "DESC") {
-  let queryStr = `SELECT reviews.review_id, reviews.title, reviews.designer, reviews.owner, reviews.review_img_url, reviews.review_body, reviews.category, reviews.created_at, reviews.votes, COUNT(comments.review_id) AS comment_count
+function fetchReviews(
+  category,
+  sort_by = "created_at",
+  order = "DESC",
+  limit = 10,
+  p
+) {
+  let queryStr = `SELECT reviews.review_id, reviews.title, reviews.designer, reviews.owner, reviews.review_img_url, reviews.review_body, reviews.category, reviews.created_at, reviews.votes, COUNT(comments.review_id) AS comment_count, 
+  (SELECT COUNT(*) AS total_count FROM reviews)
     FROM reviews
     LEFT JOIN comments
     ON reviews.review_id = comments.review_id`;
@@ -55,6 +62,17 @@ function fetchReviews(category, sort_by = "created_at", order = "DESC") {
 
   if (orderOption) {
     queryStr += ` ${order}`;
+  } else {
+    return Promise.reject("Invalid query");
+  }
+
+  if (typeof +limit === "number" && !p) {
+    queryStr += ` LIMIT ${limit}`;
+  } else if (typeof +limit === "number" && +p === 1) {
+    queryStr += ` LIMIT ${limit}`;
+  } else if (typeof +limit === "number" && +p > 1) {
+    const offset = +limit * (+p - 1);
+    queryStr += ` LIMIT ${limit} OFFSET ${offset}`;
   } else {
     return Promise.reject("Invalid query");
   }

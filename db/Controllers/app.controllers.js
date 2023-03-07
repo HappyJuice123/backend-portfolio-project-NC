@@ -37,10 +37,10 @@ function getReview(req, res, next) {
 }
 
 function getReviews(req, res, next) {
-  const { category, sort_by, order } = req.query;
+  const { category, sort_by, order, limit, p } = req.query;
 
   const checkCategory = selectReviewByCategory(category);
-  const getReviews = fetchReviews(category, sort_by, order);
+  const getReviews = fetchReviews(category, sort_by, order, limit, p);
 
   Promise.all([checkCategory, getReviews])
     .then((result) => {

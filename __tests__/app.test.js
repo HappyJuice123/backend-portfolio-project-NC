@@ -69,7 +69,7 @@ describe("app", () => {
         .expect(200)
         .then(({ body }) => {
           const { reviews } = body;
-          expect(reviews).toHaveLength(13);
+          expect(reviews).toHaveLength(10);
           reviews.forEach((review) => {
             expect(review).toMatchObject({
               title: expect.any(String),
@@ -109,7 +109,7 @@ describe("app", () => {
             ).toISOString();
           });
 
-          expect(reviews).toHaveLength(13);
+          expect(reviews).toHaveLength(10);
           expect(reviewsSorted).toEqual(reviews);
         });
     });
@@ -119,7 +119,7 @@ describe("app", () => {
         .expect(200)
         .then(({ body }) => {
           const { reviews } = body;
-          expect(reviews).toHaveLength(11);
+          expect(reviews).toHaveLength(10);
           reviews.forEach((review) => {
             expect(review).toMatchObject({
               review_id: expect.any(Number),
@@ -158,7 +158,7 @@ describe("app", () => {
         .expect(200)
         .then(({ body }) => {
           const { reviews } = body;
-          expect(reviews).toHaveLength(13);
+          expect(reviews).toHaveLength(10);
           expect(reviews).toBeSortedBy("title", { descending: true });
         });
     });
@@ -176,7 +176,7 @@ describe("app", () => {
         .expect(200)
         .then(({ body }) => {
           const { reviews } = body;
-          expect(reviews).toHaveLength(13);
+          expect(reviews).toHaveLength(10);
           expect(reviews).toBeSortedBy("owner", { descending: false });
         });
     });
@@ -186,6 +186,72 @@ describe("app", () => {
         .expect(400)
         .then(({ body }) => {
           expect(body.msg).toBe("Bad Request");
+        });
+    });
+    test("200: GET - responds with object of first 10 reviews only and an additional key value pair of the total count of all reviews", () => {
+      return request(app)
+        .get("/api/reviews?limit=10&p=1")
+        .expect(200)
+        .then(({ body }) => {
+          const { reviews } = body;
+          expect(reviews).toHaveLength(10);
+          reviews.map((review) => {
+            expect(review).toMatchObject({
+              review_id: expect.any(Number),
+              title: expect.any(String),
+              designer: expect.any(String),
+              owner: expect.any(String),
+              review_img_url: expect.any(String),
+              review_body: expect.any(String),
+              category: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+              comment_count: expect.any(String),
+              total_count: "13",
+            });
+          });
+        });
+    });
+    test("200: GET - responds with object of second page of 3 reviews with a limit of 10", () => {
+      return request(app)
+        .get("/api/reviews?limit=10&p=2")
+        .expect(200)
+        .then(({ body }) => {
+          const { reviews } = body;
+          expect(reviews).toHaveLength(3);
+          reviews.map((review) => {
+            expect(review).toMatchObject({
+              review_id: expect.any(Number),
+              title: expect.any(String),
+              designer: expect.any(String),
+              owner: expect.any(String),
+              review_img_url: expect.any(String),
+              review_body: expect.any(String),
+              category: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+              comment_count: expect.any(String),
+              total_count: "13",
+            });
+          });
+        });
+    });
+    test("400: GET - responds with a msg of bad request when passed a limit that isn't a number", () => {
+      return request(app)
+        .get("/api/reviews?limit=hi&p=2")
+        .expect(400)
+        .then(({ body }) => {
+          const { msg } = body;
+          expect(msg).toBe("Bad Request");
+        });
+    });
+    test("200: GET - responds with an empty array", () => {
+      return request(app)
+        .get("/api/reviews?limit=10&p=3")
+        .expect(200)
+        .then(({ body }) => {
+          const { reviews } = body;
+          expect(reviews).toHaveLength(0);
         });
     });
     test("201: POST - responds with an object of the newly added review", () => {

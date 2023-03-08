@@ -67,9 +67,10 @@ function addReview(req, res, next) {
 
 function getComments(req, res, next) {
   const { review_id } = req.params;
+  const { limit, p } = req.query;
 
   const reviewIdPromise = fetchReview(review_id);
-  const commentsPromise = fetchComments(review_id);
+  const commentsPromise = fetchComments(review_id, limit, p);
 
   Promise.all([reviewIdPromise, commentsPromise])
     .then((result) => {

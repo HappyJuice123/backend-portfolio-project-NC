@@ -175,13 +175,24 @@ function insertReview(
     });
 }
 
-function fetchComments(review_id) {
+function fetchComments(review_id, limit = 10, p) {
   let queryStr = "SELECT * FROM comments";
   const queryParams = [];
 
   if (review_id) {
     queryStr += " WHERE review_id = $1";
     queryParams.push(review_id);
+  }
+
+  if (typeof +limit === "number" && !p) {
+    queryStr += ` LIMIT ${limit}`;
+  } else if (typeof +limit === "number" && +p === 1) {
+    queryStr += ` LIMIT ${limit}`;
+  } else if (typeof +limit === "number" && +p > 1) {
+    const offset = +limit * (+p - 1);
+    queryStr += ` LIMIT ${limit} OFFSET ${offset}`;
+  } else {
+    return Promise.reject("Invalid query");
   }
 
   return db.query(queryStr, queryParams).then(({ rows }) => {

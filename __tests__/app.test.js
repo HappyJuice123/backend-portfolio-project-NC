@@ -470,6 +470,71 @@ describe("app", () => {
           expect(body.comments).toHaveLength(0);
         });
     });
+    test("200: GET - responds with a default of 10 maximum when limit is not specified", () => {
+      return request(app)
+        .get("/api/reviews/2/comments")
+        .expect(200)
+        .then(({ body }) => {
+          const { comments } = body;
+          expect(comments).toHaveLength(3);
+          comments.map((comment) => {
+            expect(comment).toMatchObject({
+              comment_id: expect.any(Number),
+              votes: expect.any(Number),
+              created_at: expect.any(String),
+              author: expect.any(String),
+              body: expect.any(String),
+              review_id: expect.any(Number),
+            });
+          });
+        });
+    });
+    test("200: GET - responds with a length of one when limit is passed as one", () => {
+      return request(app)
+        .get("/api/reviews/2/comments?limit=1")
+        .expect(200)
+        .then(({ body }) => {
+          const { comments } = body;
+          expect(comments).toHaveLength(1);
+          comments.map((comment) => {
+            expect(comment).toMatchObject({
+              comment_id: expect.any(Number),
+              votes: expect.any(Number),
+              created_at: expect.any(String),
+              author: expect.any(String),
+              body: expect.any(String),
+              review_id: expect.any(Number),
+            });
+          });
+        });
+    });
+    test("200: GET - responds with an empty array when passed limit=10 and p=2", () => {
+      return request(app)
+        .get("/api/reviews/2/comments?limit=10&p=2")
+        .expect(200)
+        .then(({ body }) => {
+          const { comments } = body;
+          expect(comments).toHaveLength(0);
+        });
+    });
+    test("400: GET - responds with a msg of bad request when passed a limit that isn't a number", () => {
+      return request(app)
+        .get("/api/reviews/2/comments?limit=hi&p=2")
+        .expect(400)
+        .then(({ body }) => {
+          const { msg } = body;
+          expect(msg).toBe("Bad Request");
+        });
+    });
+    test("400: GET - responds with a msg of bad request when passed a p that isn't a number", () => {
+      return request(app)
+        .get("/api/reviews/2/comments?limit=10&p=hi")
+        .expect(400)
+        .then(({ body }) => {
+          const { msg } = body;
+          expect(msg).toBe("Bad Request");
+        });
+    });
     test("201: POST - adds an object onto comments with the properties username and body and responds with the posted comment", () => {
       const newComment = {
         username: "mallionaire",

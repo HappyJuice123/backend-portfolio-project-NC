@@ -16,6 +16,7 @@ const {
   updateVote,
   addReview,
   addCategory,
+  deleteReview,
 } = require("./Controllers/app.controllers");
 
 const {
@@ -49,6 +50,8 @@ app.get("/api/reviews/:review_id/comments", getComments);
 app.post("/api/reviews/:review_id/comments", addComment);
 
 app.patch("/api/reviews/:review_id", updateReview);
+
+app.delete("/api/reviews/:review_id", deleteReview);
 
 // Users
 app.get("/api/users", getUsers);

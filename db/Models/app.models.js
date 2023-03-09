@@ -253,6 +253,25 @@ function updatedReview(review_id, inc_votes) {
     });
 }
 
+function removeReview(review_id) {
+  return db
+    .query(
+      `
+    DELETE FROM reviews 
+    WHERE review_id = $1
+    RETURNING *
+    `,
+      [review_id]
+    )
+    .then((result) => {
+      if (result.rowCount === 0) {
+        return Promise.reject("review_id does not exist");
+      }
+
+      return result.rows;
+    });
+}
+
 function fetchUsers() {
   return db
     .query(
@@ -333,4 +352,5 @@ module.exports = {
   addVote,
   insertReview,
   insertCategory,
+  removeReview,
 };

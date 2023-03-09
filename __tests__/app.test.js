@@ -473,30 +473,30 @@ describe("app", () => {
           expect(body.msg).toBe("Bad Request");
         });
     });
-    // test("204: DELETE - responds with status code 204 returning nothing", () => {
-    //   return request(app)
-    //     .delete("/api/review/1")
-    //     .expect(204)
-    //     .then((response) => {
-    //       expect(response.res.statusMessage).toBe("No Content");
-    //     });
-    // });
-    // test("404: DELETE - responds with a msg of comment_id does not exist when given a valid but non-existent comment id", () => {
-    //   return request(app)
-    //     .delete("/api/comments/2222")
-    //     .expect(404)
-    //     .then(({ body }) => {
-    //       expect(body.msg).toBe("comment_id does not exist");
-    //     });
-    // });
-    // test("400: DELETE - responds with a msg of Bad Request when given a non valid comment_id", () => {
-    //   return request(app)
-    //     .delete("/api/comments/notAValidCommentId")
-    //     .expect(400)
-    //     .then(({ body }) => {
-    //       expect(body.msg).toBe("Bad Request");
-    //     });
-    // });
+    test("204: DELETE - responds with status code 204 returning nothing", () => {
+      return request(app)
+        .delete("/api/reviews/1")
+        .expect(204)
+        .then((response) => {
+          expect(response.res.statusMessage).toBe("No Content");
+        });
+    });
+    test("404: DELETE - responds with a msg of review_id does not exist when given a valid but non-existent review id", () => {
+      return request(app)
+        .delete("/api/reviews/2222")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("review_id does not exist");
+        });
+    });
+    test("400: DELETE - responds with a msg of Bad Request when given a non valid review_id", () => {
+      return request(app)
+        .delete("/api/comments/notAValidReviewId")
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Bad Request");
+        });
+    });
   });
 
   describe("/api/reviews/:review_id/comments", () => {

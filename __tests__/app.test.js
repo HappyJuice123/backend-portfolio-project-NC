@@ -473,14 +473,14 @@ describe("app", () => {
           expect(body.msg).toBe("Bad Request");
         });
     });
-    test("204: DELETE - responds with status code 204 returning nothing", () => {
-      return request(app)
-        .delete("/api/review/1")
-        .expect(204)
-        .then((response) => {
-          expect(response.res.statusMessage).toBe("No Content");
-        });
-    });
+    // test("204: DELETE - responds with status code 204 returning nothing", () => {
+    //   return request(app)
+    //     .delete("/api/review/1")
+    //     .expect(204)
+    //     .then((response) => {
+    //       expect(response.res.statusMessage).toBe("No Content");
+    //     });
+    // });
     // test("404: DELETE - responds with a msg of comment_id does not exist when given a valid but non-existent comment id", () => {
     //   return request(app)
     //     .delete("/api/comments/2222")

@@ -12,6 +12,23 @@ function fetchCategories() {
     });
 }
 
+function insertCategory(slug, description) {
+  return db
+    .query(
+      `
+  INSERT INTO categories
+  (slug, description)
+  VALUES
+  ($1, $2)
+  RETURNING *
+  `,
+      [slug, description]
+    )
+    .then(({ rows }) => {
+      return rows[0];
+    });
+}
+
 function fetchReviews(
   category,
   sort_by = "created_at",
@@ -315,4 +332,5 @@ module.exports = {
   fetchUser,
   addVote,
   insertReview,
+  insertCategory,
 };

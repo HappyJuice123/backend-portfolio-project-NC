@@ -15,6 +15,7 @@ const {
   getUser,
   updateVote,
   addReview,
+  addCategory,
 } = require("./Controllers/app.controllers");
 
 const {
@@ -33,6 +34,8 @@ app.get("/api", getEndpoints);
 
 // Categories
 app.get("/api/categories", getCategories);
+
+app.post("/api/categories", addCategory);
 
 // Reviews
 app.get("/api/reviews", getReviews);

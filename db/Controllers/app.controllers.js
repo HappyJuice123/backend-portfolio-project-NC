@@ -12,12 +12,25 @@ const {
   fetchUser,
   addVote,
   insertReview,
+  insertCategory,
 } = require("../Models/app.models");
 
 function getCategories(req, res, next) {
   fetchCategories()
     .then((categories) => {
       res.status(200).send({ categories });
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
+
+function addCategory(req, res, next) {
+  const { slug, description } = req.body;
+
+  insertCategory(slug, description)
+    .then((newCategory) => {
+      res.status(201).send({ newCategory });
     })
     .catch((err) => {
       next(err);
@@ -186,4 +199,5 @@ module.exports = {
   getUser,
   updateVote,
   addReview,
+  addCategory,
 };

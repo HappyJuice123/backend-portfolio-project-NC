@@ -13,6 +13,7 @@ const {
   addVote,
   insertReview,
   insertCategory,
+  removeReview,
 } = require("../Models/app.models");
 
 function getCategories(req, res, next) {
@@ -124,6 +125,18 @@ function updateReview(req, res, next) {
     });
 }
 
+function deleteReview(req, res, next) {
+  const { review_id } = req.params;
+
+  removeReview(review_id)
+    .then((result) => {
+      res.status(204).send();
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
+
 function getUsers(req, res, next) {
   fetchUsers()
     .then((users) => {
@@ -200,4 +213,5 @@ module.exports = {
   updateVote,
   addReview,
   addCategory,
+  deleteReview,
 };

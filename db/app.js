@@ -2,6 +2,8 @@ const express = require("express");
 
 const db = require("./connection");
 
+const cors = require("cors");
+
 const {
   getCategories,
   getReviews,
@@ -27,7 +29,7 @@ const {
 } = require("./Controllers/error-handling.controller");
 
 const app = express();
-
+app.use(cors());
 app.use(express.json());
 
 // EndPoints

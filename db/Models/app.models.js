@@ -100,35 +100,34 @@ function fetchReviews(
 }
 
 function selectReviewByCategory(category) {
-  let queryStr = "SELECT * FROM categories";
+  return db.query(`SELECT slug FROM categories`).then(({ rows }) => {
+    const validCategoryOptions = rows.map((row) => {
+      return row.slug;
+    });
 
-  const queryParams = [];
+    let queryStr = "SELECT * FROM categories";
 
-  const validCategoryOptions = [
-    "euro game",
-    "social deduction",
-    "dexterity",
-    "children's games",
-  ];
+    const queryParams = [];
 
-  const categoryOption = validCategoryOptions.find(
-    (option) => option === category
-  );
+    const categoryOption = validCategoryOptions.find(
+      (option) => option === category
+    );
 
-  if (categoryOption) {
-    queryStr += " WHERE slug = $1";
-    queryParams.push(category);
-  }
-
-  if (category && !categoryOption) {
-    return Promise.reject("Invalid query");
-  }
-
-  return db.query(queryStr, queryParams).then(({ rows }) => {
-    if (rows.length === 0) {
-      return Promise.reject("No category found");
+    if (categoryOption) {
+      queryStr += " WHERE slug = $1";
+      queryParams.push(category);
     }
-    return rows;
+
+    if (category && !categoryOption) {
+      return Promise.reject("Invalid query");
+    }
+
+    return db.query(queryStr, queryParams).then(({ rows }) => {
+      if (rows.length === 0) {
+        return Promise.reject("No category found");
+      }
+      return rows;
+    });
   });
 }
 

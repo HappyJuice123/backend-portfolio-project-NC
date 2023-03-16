@@ -54,7 +54,7 @@ function fetchReviews(
   const validSortByOptions = [
     "review_id",
     "title",
-    "desginer",
+    "designer",
     "owner",
     "review_img_url",
     "review_body",
@@ -70,9 +70,12 @@ function fetchReviews(
 
   const orderOption = validOrderByOptions.find((option) => option === order);
 
-  if (validOption) {
+  if (validOption && validOption !== "comment_count") {
     queryStr += `
         ORDER BY reviews.${sort_by}`;
+  } else if (validOption && validOption === "comment_count") {
+    queryStr += `
+        ORDER BY comment_count`;
   } else {
     return Promise.reject("Invalid query");
   }

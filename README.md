@@ -2,6 +2,10 @@ Welcome to Jason's backend project
 
 This is an board games API which shows the reviews, comments, categories and users involved.
 
+## Link to hosted version
+
+https://jasons-backend-games-project.onrender.com/api
+
 ## Access to repo
 
 Please navigate to https://github.com/HappyJuice123/backend-portfolio-project-NC and fork the repo.
@@ -38,7 +42,3 @@ To seed the database, there is a file in the `db` folder for the database. You c
 ## Endpoints
 
 To see information on the available endpoints, please navigate to endpoint "/api".
-
-## Link to hosted version
-
-https://jasons-backend-games-project.onrender.com

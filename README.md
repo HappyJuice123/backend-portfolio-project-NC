@@ -1,4 +1,4 @@
-Welcome to Jason's backend project
+# Welcome to Jason's backend project
 
 This is an board games API which shows the reviews, comments, categories and users involved.
 
